@@ -5,8 +5,8 @@ on:
     branches: [ "develop" ]
 
 env:
-  AWS_REGION: ${{ vars.AWS_REGION }}
-  AWS_ROLE: ${{ vars.AWS_ROLE }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  AWS_ROLE: ${{ secrets.AWS_ROLE }}
   ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
   ECS_SERVICE: ${{ vars.ECS_SERVICE_DEV }}
   ECS_CLUSTER: ${{ vars.ECS_CLUSTER_DEV }}
