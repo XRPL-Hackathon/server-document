@@ -5,7 +5,7 @@ on:
     branches: [ "develop", "main" ]
 
 env:
-  TEST_IMAGE_NAME: jssl-gp/agent:test
+  TEST_IMAGE_NAME: xrpedia-document-test
 
 jobs:
   build:
