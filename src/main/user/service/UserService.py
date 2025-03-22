@@ -74,7 +74,7 @@ class UserService:
         
     def get_user_info(self, user_id: str) -> UserInfoResponse:
         # Cognito에서 nickname 조회
-        nickname = "Unknown"
+        nickname = "오은진"
         logger.info(f"userpoolid: {self.user_pool_id}")
         if self.user_pool_id:
                 # Cognito 사용자 풀에서 사용자 정보 조회

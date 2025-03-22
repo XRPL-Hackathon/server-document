@@ -10,11 +10,11 @@ from src.main.user.service.UserService import UserService
 from datetime import datetime
 import asyncio
 
-repo = UserRepository()
-service_repo= UserService()
 
 # 사용자로부터 request 받아서 ~~
 async def save_document_service(request: documentRequestDto, user_id: str) :
+    repo = UserRepository()
+    service_repo= UserService()
     upload_date = datetime.now()
     
     user = service_repo.get_user_info(user_id)
