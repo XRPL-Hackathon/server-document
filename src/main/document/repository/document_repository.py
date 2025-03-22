@@ -83,4 +83,21 @@ def get_all_documents():
     document_collection = db['document_collection']
 
     documents = document_collection.find()
-    return list(documents)
+    result = []
+    for doc in documents:
+        document = documentDetailDto(
+            document_id=str(doc["_id"]),
+            file_id=doc["file_id"],
+            document_name=doc["document_name"],
+            document_image_url=doc["document_image_url"],
+            introduction=doc["introduction"],
+            downloads=doc["downloads"],
+            pageNumber=doc["pageNumber"],
+            upload_date=doc["upload_date"],
+            uploader=doc["uploader_id"],
+            price=doc["price"],
+            category=doc["category"],
+            rating=doc["rating"]
+        )
+        result.append(document)
+    return result
