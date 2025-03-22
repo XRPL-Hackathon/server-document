@@ -76,3 +76,11 @@ def get_documents_by_user(user_id: str) -> List[documentDetailDto]:
 #     user = document_collection.find_one({"_id":ObjectId(user_id)})
     
 #     return user[""]
+
+def get_all_documents():
+    client = get_mongo_client()
+    db = client['xrpedia-data']
+    document_collection = db['document_collection']
+
+    documents = document_collection.find()
+    return list(documents)

@@ -12,9 +12,9 @@ router = APIRouter(
 )
 
 @router.get("", response_model=List[documentDetailDto])
-async def getDocuments(user_id: uuid.UUID = Depends(get_current_user)):
+async def getDocuments():
     try:
-        return await get_documents(str(user_id))
+        return await get_documents()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"문서 목록 조회 중 문제 발생: {str(e)}")
 

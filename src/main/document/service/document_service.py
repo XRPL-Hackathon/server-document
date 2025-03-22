@@ -2,7 +2,7 @@
 #2. 이를 db에 저장한다.
 #3. client에게 보낸다.
 
-from src.main.document.repository.document_repository import save_document, get_document, get_documents_by_user
+from src.main.document.repository.document_repository import get_all_documents, save_document, get_document, get_documents_by_user
 from src.main.document.dto.document import saveDocument, documentRequestDto
 from datetime import datetime
 import asyncio
@@ -36,5 +36,5 @@ async def get_document_detail(document_id: str):
     return get_document(document_id)
 
 # 사용자의 모든 문서 목록 조회
-async def get_documents(user_id: str):
-    return get_documents_by_user(user_id)
+async def get_documents():
+    return get_all_documents()
