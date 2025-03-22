@@ -2,7 +2,7 @@
 #2. 이를 db에 저장한다.
 #3. client에게 보낸다.
 
-from src.main.document.repository.document_repository import save_document, get_document
+from src.main.document.repository.document_repository import  get_all_documents, save_document, get_document
 from src.main.user.repository.UserRepository import get_user
 from src.main.nft.service.nft_service import process_nft_issuance_with_response
 from src.main.document.dto.document import saveDocument, documentRequestDto
@@ -48,3 +48,7 @@ async def save_document_service(request: documentRequestDto, user_id: str) :
 # 조회하기
 async def get_document_detail(document_id: str):
     return get_document(document_id)
+
+# 사용자의 모든 문서 목록 조회
+async def get_documents():
+    return get_all_documents()
