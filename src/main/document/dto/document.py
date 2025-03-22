@@ -9,7 +9,7 @@ class saveDocument(BaseModel):
     downloads: int # 더미
     pageNumber: int # 더미
     upload_date: datetime
-    uploader_id: str 
+    uploader: str 
     price: float 
     category: str
     rating: float # 더미

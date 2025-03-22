@@ -6,6 +6,7 @@ from src.main.document.repository.document_repository import  get_all_documents,
 from src.main.user.repository.UserRepository import get_user
 from src.main.nft.service.nft_service import process_nft_issuance_with_response
 from src.main.document.dto.document import saveDocument, documentRequestDto
+from src.main.user.service import UserService
 from datetime import datetime
 import asyncio
 
@@ -13,6 +14,9 @@ import asyncio
 # 사용자로부터 request 받아서 ~~
 async def save_document_service(request: documentRequestDto, user_id: str) :
     upload_date = datetime.now()
+
+    user = UserService.get_user_info(user_id)
+    user_name = user["nickname"]
 
     saved = saveDocument(
         file_id = request.file_id,
@@ -22,7 +26,7 @@ async def save_document_service(request: documentRequestDto, user_id: str) :
         downloads=32,
         pageNumber=3,
         upload_date=upload_date,
-        uploader_id=user_id,
+        uploader=user_name,
         price=request.price,
         category=request.category,
         rating=4.0
