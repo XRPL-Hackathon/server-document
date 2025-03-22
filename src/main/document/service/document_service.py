@@ -41,7 +41,7 @@ async def save_document_service(request: documentRequestDto, user_id: str) :
     point += 500
 
     #nft 발급하기
-    process_nft_issuance_with_response(user_id, grade, point)
+    await process_nft_issuance_with_response(user_id, grade, point)
     
     return document_id 
 

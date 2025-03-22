@@ -1,4 +1,4 @@
-from src.main.nft.dto.nft_dto import NftResponseDTO, NftSaveDto
+from src.main.nft.dto.nft_dto import NftResponseDto, NftSaveDto
 from src.main.user.repository.UserRepository import get_user
 from src.main.nft.repository.nft_repository import save_userDB_nft, save_nfts_bulk 
 from datetime import datetime, timezone, timedelta
@@ -77,10 +77,10 @@ async def mint_nft_on_xrpl(user, grade, issuser_wallet, issuserAddr):
             raise Exception("NFT ID 추출 실패")
 
         return {
-            "user_wallet": user.wallet,
-            "point": user.point,
+            "user_wallet": user.get("_id"),
+            "point": user.get("point"),
             "nft_id": nft_id,
-            "nft_grade": grade,
+            "nft_grade": user.get("nft_grade"),
             "transaction_hash": tx_hash,
             "issued_at": issued_at,
             "expired_at": expired_at
@@ -107,18 +107,17 @@ async def next_grade(grade:str)-> str:
         raise Exception("400: 유효하지 않은 등급입니다.")
 
 # 전체 로직
-async def process_nft_issuance_with_response(user_id: str, point: int) -> NftResponseDTO:
+async def process_nft_issuance_with_response(user_id: str, origin_grade:str, point: int):
     issuser_wallet, issuserAddr = await generate_wallet()
-
-    # UserRepository에서 grade를 가져오기기
-    user = get_user(user_id)
-    origin_grade = user.get("nft_grade")
 
     #grade 다음 단계 구하기 로직 
     grade = await next_grade(origin_grade)
 
+    #user_id
+    user = get_user(user_id)
+
     # 하나 발급 -> grade의 다음 단계로 받아오게끔 하기
-    result = mint_nft_on_xrpl(user, grade, issuser_wallet, issuserAddr)
+    result = await mint_nft_on_xrpl(user, grade, issuser_wallet, issuserAddr)
 
     # DB 저장용 객체 변환
     nft_records = NftSaveDto(
@@ -129,13 +128,13 @@ async def process_nft_issuance_with_response(user_id: str, point: int) -> NftRes
             issued_at=result["issued_at"],
             expired_at=result["expired_at"]
         )
-    save_nfts_bulk(nft_records)
+    save_nfts_bulk(nft_records.model_dump())
 
     #user에도 반영되도록 구현현
     save_userDB_nft(user_id, grade, point)
 
     # DTO 변환
-    print(NftResponseDTO(
+    print(NftResponseDto(
             user_wallet_id=result["user_wallet"],
             point=result["point"],
             nft_id=result["nft_id"],

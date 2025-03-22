@@ -1,5 +1,5 @@
 from src.config.mongodb import get_mongo_client
-from src.main.nft.dto.nft_dto import NftResponseDto
+from src.main.nft.dto.nft_dto import NftSaveDto
 from datetime import datetime
 
 
@@ -20,23 +20,9 @@ def save_userDB_nft(user_id:str, nft_grade: str, point: int):
 
 
 # repository/nft_repository.py
-def save_nfts_bulk(response: NftResponseDto):
+def save_nfts_bulk(response: NftSaveDto):
     client = get_mongo_client()
     db = client['xrpedia-data']
     nft_collection = db['nft']
 
-    docs = [
-        {
-            "nft_id": r.nft_id,
-            "user_wallet": r.user_wallet,
-            "nft_grade": r.nft_grade,
-            "transaction_hash": r.transaction_hash
-            #nft_metadata_uri: r.metadata_uri
-            #"issued_at": r.issued_at,
-            #"expires_at": r.expires_at,
-        }
-        for r in NftResponseDto
-    ]
-    
-    if docs: 
-        nft_collection.insert_many(docs)
+    nft_collection.insert_one(response)
