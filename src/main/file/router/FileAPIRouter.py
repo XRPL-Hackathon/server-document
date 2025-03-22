@@ -16,7 +16,7 @@ class FileMetadata(BaseModel):
     tags: Optional[list[str]] = None
 
 # 파일 업로드
-@router.post("/")
+@router.post("")
 async def upload_file(
     file: UploadFile = File(...),
     user_id: uuid.UUID = Depends(get_current_user),
