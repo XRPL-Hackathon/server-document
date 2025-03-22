@@ -1,5 +1,6 @@
+import json
 from src.main.file.repository.FileRepository import FileRepository
-from fastapi import UploadFile
+from fastapi import UploadFile, requests
 import os
 import uuid
 from datetime import datetime, UTC
@@ -42,6 +43,19 @@ class FileService:
         }
         
         file_id = self.file_repository.save_file_info(file_info)
+
+        # 파일 중복 체크 API 호출
+        try:
+            duplicate_check_url = "https://5erhg0u08g.execute-api.ap-northeast-2.amazonaws.com/ai-proxy/file-duplicate-checks"
+            payload = {
+                "user_id": user_id,
+                "file_id": str(file_id)
+            }
+            headers = {"Content-Type": "application/json"}
+            requests.post(duplicate_check_url, data=json.dumps(payload), headers=headers)
+        except Exception as e:
+            print(f"파일 중복 체크 API 호출 중 오류 발생: {str(e)}")
+            
         return file_id
     
     def update_file_info(self, file_id: str, metadata: dict, user_id: str):
