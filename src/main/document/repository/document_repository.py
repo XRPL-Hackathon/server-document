@@ -8,6 +8,5 @@ def save_document(document : saveDocument) -> str:
     db = client['xrpedia-data']
     document_collection = db['document_collection'] #db 이름 지정
 
-    result = document_collection.insert_one(document.model_dump())
-
-    return str(result.inserted_id)
+    document_id = document_collection.insert_one(document.model_dump()).inserted_id
+    return str(document_id)

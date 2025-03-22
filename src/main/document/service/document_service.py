@@ -3,13 +3,13 @@
 #3. client에게 보낸다.
 
 from src.main.document.repository.document_repository import save_document
-from src.main.document.dto.document import saveDocument, documentRequestDto, documentResponseDto
+from src.main.document.dto.document import saveDocument, documentRequestDto
 from datetime import datetime
 import asyncio
 
 
 # 사용자로부터 request 받아서 ~~
-def save_document_service(request: documentRequestDto, user_id: str) :
+async def save_document_service(request: documentRequestDto, user_id: str) :
     upload_date = datetime.now()
 
     saved = saveDocument(
@@ -20,7 +20,7 @@ def save_document_service(request: documentRequestDto, user_id: str) :
         downloads=32,
         pageNumber=3,
         upload_date=upload_date,
-        uploader_id=str,
+        uploader_id=user_id,
         price=request.price,
         category=request.category
     )
@@ -28,6 +28,5 @@ def save_document_service(request: documentRequestDto, user_id: str) :
     #db에 저장하기
     document_id = save_document(saved)
 
-    print(saved)
 
     return document_id 

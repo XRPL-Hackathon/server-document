@@ -11,10 +11,10 @@ router = APIRouter(
     tags=["문서 업로드"]
 )
 
-@router.post("", response_model=documentRequestDto)
-async def uploadDocument(user_id: uuid.UUID = Depends(get_current_user)):
+@router.post("")
+async def uploadDocument(request: documentRequestDto, user_id: uuid.UUID = Depends(get_current_user)):
     try:
-        document_id = await save_document_service(documentRequestDto,str(user_id))
+        document_id = await save_document_service(request, str(user_id))
         return document_id
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"문서 업로드 중 문제 발생생: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"문서 업로드 중 문제 발생: {str(e)}")
