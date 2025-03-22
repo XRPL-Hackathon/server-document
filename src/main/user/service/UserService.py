@@ -7,6 +7,10 @@ import boto3
 import os
 from src.main.user.dto.UserInfoDto import UserInfoResponse
 from dotenv import load_dotenv
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -22,6 +26,14 @@ class UserService:
             )
             self.cognito_client = session.client(
                 'cognito-idp',
+                aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
+                aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
+                region_name=os.environ.get('AWS_REGION', 'ap-northeast-2')
+            )
+        elif os.environ.get('ENV') == 'local':
+            self.cognito_client = boto3.client(
+                'cognito-idp',
+                
                 region_name=os.environ.get('AWS_REGION', 'ap-northeast-2')
             )
         else:
@@ -29,18 +41,6 @@ class UserService:
                 'cognito-idp',
                 region_name=os.environ.get('AWS_REGION', 'ap-northeast-2')
             )
-    
-    def get_wallets(self, user_id: str):
-        wallets = self.user_repository.find_wallets_by_user_id(user_id)
-        if not wallets:
-            return {"message": "No wallets found for this user"}
-        return wallets
-    
-    async def generate_wallet(self, user_id: str):
-        wallet = await generate_faucet_wallet(client=client, debug=True)
-        wallet_address = wallet.classic_address
-        result = self.user_repository.save_wallet(user_id, wallet_address)
-        return result
     
     def get_account_info(self, client: JsonRpcClient, address: str, **kwargs) -> dict:
         """
@@ -75,13 +75,15 @@ class UserService:
     def get_user_info(self, user_id: str) -> UserInfoResponse:
         # Cognito에서 nickname 조회
         nickname = "Unknown"
-        try:
-            if self.user_pool_id:
+        logger.info(f"userpoolid: {self.user_pool_id}")
+        if self.user_pool_id:
                 # Cognito 사용자 풀에서 사용자 정보 조회
                 response = self.cognito_client.list_users(
                     UserPoolId=self.user_pool_id,
                     Filter=f'sub = "{user_id}"'
                 )
+
+                logger.info(response)
                 
                 if response.get('Users') and len(response['Users']) > 0:
                     # 사용자의 속성에서 nickname 찾기
@@ -89,8 +91,22 @@ class UserService:
                         if attr['Name'] == 'nickname':
                             nickname = attr['Value']
                             break
-        except Exception as e:
-            print(f"Error fetching user from Cognito: {str(e)}")
+        # try:
+        #     if self.user_pool_id:
+        #         # Cognito 사용자 풀에서 사용자 정보 조회
+        #         response = self.cognito_client.list_users(
+        #             UserPoolId=self.user_pool_id,
+        #             Filter=f'sub = "{user_id}"'
+        #         )
+                
+        #         if response.get('Users') and len(response['Users']) > 0:
+        #             # 사용자의 속성에서 nickname 찾기
+        #             for attr in response['Users'][0].get('Attributes', []):
+        #                 if attr['Name'] == 'nickname':
+        #                     nickname = attr['Value']
+        #                     break
+        # except Exception as e:
+        #     print(f"Error fetching user from Cognito: {str(e)}")
         
         # MongoDB에서 사용자의 지갑 주소 조회
         # point = 0.0

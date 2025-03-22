@@ -1,5 +1,5 @@
 from src.main.nft.dto.nft_dto import NftResponseDto, NftSaveDto
-from src.main.user.repository.UserRepository import get_user
+from src.main.user.repository.UserRepository import UserRepository
 from src.main.nft.repository.nft_repository import save_userDB_nft, save_nfts_bulk 
 from datetime import datetime, timezone, timedelta
 import asyncio
@@ -114,7 +114,8 @@ async def process_nft_issuance_with_response(user_id: str, origin_grade:str, poi
     grade = await next_grade(origin_grade)
 
     #user_id
-    user = get_user(user_id)
+    repo = UserRepository()
+    user = repo.get_user(user_id)
 
     # 하나 발급 -> grade의 다음 단계로 받아오게끔 하기
     result = await mint_nft_on_xrpl(user, grade, issuser_wallet, issuserAddr)
