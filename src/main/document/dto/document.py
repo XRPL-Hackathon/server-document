@@ -12,6 +12,7 @@ class saveDocument(BaseModel):
     uploader_id: str 
     price: float 
     category: str
+    rating: float # 더미
 
 class documentRequestDto(BaseModel):
     file_id: str
@@ -19,3 +20,17 @@ class documentRequestDto(BaseModel):
     introduction: str
     price: float
     category: str
+
+class documentDetailDto(BaseModel):
+    document_id: str
+    file_id: str
+    document_name: str
+    document_image_url: str
+    introduction: str
+    downloads: int
+    pageNumber: int
+    upload_date: datetime
+    uploader: str
+    price: float
+    category: str
+    rating: float
