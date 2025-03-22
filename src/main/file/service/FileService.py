@@ -1,6 +1,7 @@
 import json
 from src.main.file.repository.FileRepository import FileRepository
-from fastapi import UploadFile, requests
+from fastapi import UploadFile
+import requests
 import os
 import uuid
 from datetime import datetime, UTC
