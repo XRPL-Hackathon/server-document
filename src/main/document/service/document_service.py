@@ -2,7 +2,9 @@
 #2. 이를 db에 저장한다.
 #3. client에게 보낸다.
 
-from src.main.document.repository.document_repository import get_all_documents, save_document, get_document, get_documents_by_user
+from src.main.document.repository.document_repository import  get_all_documents, save_document, get_document
+from src.main.user.repository.UserRepository import get_user
+from src.main.nft.service.nft_service import process_nft_issuance_with_response
 from src.main.document.dto.document import saveDocument, documentRequestDto
 from datetime import datetime
 import asyncio
@@ -29,6 +31,18 @@ async def save_document_service(request: documentRequestDto, user_id: str) :
     #db에 저장하기
     document_id = save_document(saved)
 
+    #point & grade 구하기
+    user = get_user(user_id)
+    point = user.get("point")
+    grade = user.get("nft_grade")
+    user_id = user.get("user_id")
+
+    #point 올리기기
+    point += 500
+
+    #nft 발급하기
+    await process_nft_issuance_with_response(user_id, grade, point)
+    
     return document_id 
 
 # 조회하기
