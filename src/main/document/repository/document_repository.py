@@ -32,7 +32,7 @@ def get_document(document_id: str) -> documentDetailDto:
         downloads= get_doc["downloads"],
         pageNumber= int(get_doc["pageNumber"], 0),
         upload_date= get_doc["upload_date"],
-        uploader= get_doc["uploader_id"], #이거 추후에 변경해야 함함
+        uploader= get_doc["uploader"], #이거 추후에 변경해야 함함
         price= get_doc["price"],
         category= get_doc["category"],
         rating= get_doc["rating"])
@@ -59,7 +59,7 @@ def get_documents_by_user(user_id: str) -> List[documentDetailDto]:
             downloads=doc["downloads"],
             pageNumber=doc["pageNumber"],
             upload_date=doc["upload_date"],
-            uploader=doc["uploader_id"],
+            uploader=doc["uploader"],
             price=doc["price"],
             category=doc["category"],
             rating=doc["rating"]
@@ -94,7 +94,7 @@ def get_all_documents():
             downloads=doc["downloads"],
             pageNumber=doc["pageNumber"],
             upload_date=doc["upload_date"],
-            uploader=doc["uploader_id"],
+            uploader=doc["uploader"],
             price=doc["price"],
             category=doc["category"],
             rating=doc["rating"]
